@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication;
+package br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.authenticator.idp;
 
 import com.google.auto.service.AutoService;
 import org.keycloak.Config;
@@ -11,33 +11,36 @@ import org.keycloak.provider.ProviderConfigProperty;
 
 import java.util.List;
 
-import static org.keycloak.models.AuthenticationExecutionModel.Requirement.DISABLED;
-import static org.keycloak.models.AuthenticationExecutionModel.Requirement.REQUIRED;
-
 @AutoService(AuthenticatorFactory.class)
-public class IdpRedirectAuthenticatorFactory implements AuthenticatorFactory {
+public class IdpAuthenticatorFactory implements AuthenticatorFactory {
 
-    private static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {DISABLED, REQUIRED};
-    private static final IdpRedirectAuthenticator AUTHENTICATOR = new IdpRedirectAuthenticator();
+    private static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
+            AuthenticationExecutionModel.Requirement.DISABLED,
+            AuthenticationExecutionModel.Requirement.REQUIRED
+    };
+
+    private String jdbcUrl;
+    private String dbUsername;
+    private String dbPassword;
 
     @Override
     public String getId() {
-        return "idp-redirect";
+        return "idp-register";
     }
 
     @Override
     public String getDisplayType() {
-        return "Conditional Identity Provider Redirect";
+        return "Register User from Identity Provider";
     }
 
     @Override
     public String getHelpText() {
-        return "Redirects the user to an external URL if the user does not exist after logging in with an Identity Provider";
+        return "Registers the user in the local system if they don't exist after logging in with an Identity Provider";
     }
 
     @Override
     public String getReferenceCategory() {
-        return "idp-redirect";
+        return "idp-register";
     }
 
     @Override
@@ -57,23 +60,23 @@ public class IdpRedirectAuthenticatorFactory implements AuthenticatorFactory {
 
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
-        return List.of(new ProviderConfigProperty(
-                "redirectUrl",
-                "Redirect URL",
-                "Target URL for redirect when the user does not exist locally",
-                ProviderConfigProperty.STRING_TYPE,
-                "")
+        return List.of(
+                new ProviderConfigProperty("jdbcUrl", "JDBC URL", "", ProviderConfigProperty.STRING_TYPE, ""),
+                new ProviderConfigProperty("dbUsername", "Database Username", "", ProviderConfigProperty.STRING_TYPE, ""),
+                new ProviderConfigProperty("dbPassword", "Database Password", "", ProviderConfigProperty.STRING_TYPE, "")
         );
     }
 
     @Override
     public Authenticator create(KeycloakSession keycloakSession) {
-        return AUTHENTICATOR;
+        return new IdpAuthenticator(jdbcUrl, dbUsername, dbPassword);
     }
 
     @Override
     public void init(Config.Scope scope) {
-        // No initialization required
+        jdbcUrl = scope.get("jdbcUrl");
+        dbUsername = scope.get("dbUsername");
+        dbPassword = scope.get("dbPassword");
     }
 
     @Override

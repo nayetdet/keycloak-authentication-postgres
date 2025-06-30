@@ -1,6 +1,7 @@
-package br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication;
+package br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.authenticator.idp;
 
-import jakarta.ws.rs.core.Response;
+import br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.mapper.UserMapper;
+import br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.persistence.dao.UserDAOFactory;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.authenticators.broker.AbstractIdpAuthenticator;
@@ -10,21 +11,16 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 
-import java.net.URI;
+public class IdpAuthenticator extends AbstractIdpAuthenticator {
 
-public class IdpRedirectAuthenticator extends AbstractIdpAuthenticator {
+    private final UserDAOFactory userDAOFactory;
+
+    public IdpAuthenticator(String jdbcUrl, String username, String password) {
+        userDAOFactory = new UserDAOFactory(jdbcUrl, username, password);
+    }
 
     @Override
     protected void authenticateImpl(AuthenticationFlowContext authenticationFlowContext, SerializedBrokeredIdentityContext serializedBrokeredIdentityContext, BrokeredIdentityContext brokeredIdentityContext) {
-        var redirectUrl = authenticationFlowContext.getAuthenticatorConfig() != null && authenticationFlowContext.getAuthenticatorConfig().getConfig() != null
-                ? authenticationFlowContext.getAuthenticatorConfig().getConfig().get("redirectUrl")
-                : null;
-
-        if (redirectUrl == null || redirectUrl.isEmpty()) {
-            authenticationFlowContext.failure(AuthenticationFlowError.IDENTITY_PROVIDER_ERROR);
-            return;
-        }
-
         var brokerEmail = brokeredIdentityContext.getEmail();
         if (brokerEmail == null || brokerEmail.isEmpty()) {
             authenticationFlowContext.failure(AuthenticationFlowError.IDENTITY_PROVIDER_ERROR);
@@ -33,8 +29,21 @@ public class IdpRedirectAuthenticator extends AbstractIdpAuthenticator {
 
         var existingUser = authenticationFlowContext.getSession().users().getUserByEmail(authenticationFlowContext.getRealm(), brokerEmail);
         if (existingUser == null) {
-            var redirect = Response.seeOther(URI.create(redirectUrl)).build();
-            authenticationFlowContext.challenge(redirect);
+            var newUser = authenticationFlowContext
+                    .getSession()
+                    .users()
+                    .addUser(authenticationFlowContext.getRealm(), brokeredIdentityContext.getUsername());
+
+            newUser.setEnabled(true);
+            newUser.setEmail(brokerEmail);
+
+            if (!userDAOFactory.getUserDAO().save(UserMapper.from(newUser))) {
+                authenticationFlowContext.failure(AuthenticationFlowError.IDENTITY_PROVIDER_ERROR);
+                return;
+            }
+
+            authenticationFlowContext.setUser(newUser);
+            authenticationFlowContext.success();
             return;
         }
 
@@ -55,6 +64,11 @@ public class IdpRedirectAuthenticator extends AbstractIdpAuthenticator {
     @Override
     public boolean configuredFor(KeycloakSession keycloakSession, RealmModel realmModel, UserModel userModel) {
         return true;
+    }
+
+    @Override
+    public void close() {
+        userDAOFactory.close();
     }
 
 }
