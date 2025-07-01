@@ -9,19 +9,16 @@ public class UserDAO {
 
     private final EntityManager entityManager;
 
-    public boolean save(User user) {
+    public void save(User user) {
         var transaction = entityManager.getTransaction();
         try {
             transaction.begin();
             entityManager.persist(user);
             transaction.commit();
-            return true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-
-            return false;
         } finally {
             entityManager.close();
         }

@@ -11,6 +11,8 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 
+import java.util.UUID;
+
 public class IdpAuthenticator extends AbstractIdpAuthenticator {
 
     private final UserDAOFactory userDAOFactory;
@@ -29,20 +31,30 @@ public class IdpAuthenticator extends AbstractIdpAuthenticator {
 
         var existingUser = authenticationFlowContext.getSession().users().getUserByEmail(authenticationFlowContext.getRealm(), brokerEmail);
         if (existingUser == null) {
-            var newUser = authenticationFlowContext
+            var username = UUID.randomUUID().toString().replace("-", "");
+            var user = authenticationFlowContext
                     .getSession()
                     .users()
-                    .addUser(authenticationFlowContext.getRealm(), brokeredIdentityContext.getUsername());
+                    .addUser(authenticationFlowContext.getRealm(), username);
 
-            newUser.setEnabled(true);
-            newUser.setEmail(brokerEmail);
+            user.setEmail(brokerEmail);
+            user.setEnabled(true);
 
-            if (!userDAOFactory.getUserDAO().save(UserMapper.from(newUser))) {
+            try {
+                userDAOFactory
+                        .getUserDAO()
+                        .save(UserMapper.from(UUID.fromString(user.getId()), username));
+            } catch (Exception e) {
+                authenticationFlowContext
+                        .getSession()
+                        .users()
+                        .removeUser(authenticationFlowContext.getRealm(), user);
+
                 authenticationFlowContext.failure(AuthenticationFlowError.IDENTITY_PROVIDER_ERROR);
                 return;
             }
 
-            authenticationFlowContext.setUser(newUser);
+            authenticationFlowContext.setUser(user);
             authenticationFlowContext.success();
             return;
         }

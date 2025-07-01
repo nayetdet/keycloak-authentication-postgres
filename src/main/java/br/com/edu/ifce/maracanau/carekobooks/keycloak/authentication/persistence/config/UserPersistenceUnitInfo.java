@@ -1,6 +1,5 @@
 package br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.persistence.config;
 
-import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.SharedCacheMode;
 import jakarta.persistence.ValidationMode;
 import jakarta.persistence.spi.ClassTransformer;
@@ -16,8 +15,6 @@ import java.util.Properties;
 @RequiredArgsConstructor
 public class UserPersistenceUnitInfo implements PersistenceUnitInfo {
 
-    private final HikariDataSource dataSource;
-
     @Override
     public String getPersistenceUnitName() {
         return "user-unit";
@@ -26,16 +23,6 @@ public class UserPersistenceUnitInfo implements PersistenceUnitInfo {
     @Override
     public String getPersistenceProviderClassName() {
         return "org.hibernate.jpa.HibernatePersistenceProvider";
-    }
-
-    @Override
-    public String getScopeAnnotationName() {
-        return null;
-    }
-
-    @Override
-    public List<String> getQualifierAnnotationNames() {
-        return null;
     }
 
     @Override
@@ -50,7 +37,7 @@ public class UserPersistenceUnitInfo implements PersistenceUnitInfo {
 
     @Override
     public DataSource getNonJtaDataSource() {
-        return dataSource;
+        return null;
     }
 
     @Override
