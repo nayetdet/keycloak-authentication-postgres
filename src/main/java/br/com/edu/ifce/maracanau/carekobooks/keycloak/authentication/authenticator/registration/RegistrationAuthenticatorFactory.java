@@ -1,6 +1,5 @@
-package br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.authenticator.idp;
+package br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.authenticator.registration;
 
-import com.google.auto.service.AutoService;
 import org.keycloak.Config;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.AuthenticatorFactory;
@@ -14,29 +13,28 @@ import java.util.List;
 import static org.keycloak.models.AuthenticationExecutionModel.Requirement.DISABLED;
 import static org.keycloak.models.AuthenticationExecutionModel.Requirement.REQUIRED;
 
-@AutoService(AuthenticatorFactory.class)
-public class IdpAuthenticatorFactory implements AuthenticatorFactory {
+public class RegistrationAuthenticatorFactory implements AuthenticatorFactory {
 
     private static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {DISABLED, REQUIRED};
 
     @Override
     public String getId() {
-        return "idp-register";
+        return "register";
     }
 
     @Override
     public String getDisplayType() {
-        return "Register User from Identity Provider";
+        return "Register User";
     }
 
     @Override
     public String getHelpText() {
-        return "Registers the user in the local system if they don't exist after logging in with an Identity Provider";
+        return "Creates the user in the local system if they do not exist";
     }
 
     @Override
     public String getReferenceCategory() {
-        return "idp-register";
+        return "register";
     }
 
     @Override
@@ -61,7 +59,7 @@ public class IdpAuthenticatorFactory implements AuthenticatorFactory {
 
     @Override
     public Authenticator create(KeycloakSession keycloakSession) {
-        return new IdpAuthenticator(keycloakSession);
+        return new RegistrationAuthenticator(keycloakSession);
     }
 
     @Override
