@@ -32,12 +32,6 @@ public class User implements Serializable {
     @Column(length = 50, unique = true, nullable = false)
     private String username;
 
-    @Column(name = "display_name", length = 50)
-    private String displayName;
-
-    @Column(length = 1000)
-    private String description;
-
     @Column(name = "created_at")
     protected LocalDateTime createdAt;
 
