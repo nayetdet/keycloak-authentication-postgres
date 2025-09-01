@@ -1,6 +1,6 @@
-package br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.persistence.dao;
+package io.github.nayetdet.keycloak.authentication.postgres.persistence.dao;
 
-import br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.persistence.model.User;
+import io.github.nayetdet.keycloak.authentication.postgres.persistence.model.User;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

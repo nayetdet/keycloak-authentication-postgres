@@ -1,6 +1,6 @@
-package br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.persistence.mapper;
+package io.github.nayetdet.keycloak.authentication.postgres.persistence.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.persistence.model.User;
+import io.github.nayetdet.keycloak.authentication.postgres.persistence.model.User;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

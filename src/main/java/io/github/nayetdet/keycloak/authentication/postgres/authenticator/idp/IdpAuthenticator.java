@@ -1,7 +1,7 @@
-package br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.authenticator.idp;
+package io.github.nayetdet.keycloak.authentication.postgres.authenticator.idp;
 
-import br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.persistence.mapper.UserMapper;
-import br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.persistence.dao.UserDAO;
+import io.github.nayetdet.keycloak.authentication.postgres.persistence.mapper.UserMapper;
+import io.github.nayetdet.keycloak.authentication.postgres.persistence.dao.UserDAO;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.authenticators.broker.AbstractIdpAuthenticator;

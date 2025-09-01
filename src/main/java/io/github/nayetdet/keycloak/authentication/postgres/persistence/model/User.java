@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.persistence.model;
+package io.github.nayetdet.keycloak.authentication.postgres.persistence.model;
 
 import jakarta.persistence.*;
 import lombok.*;

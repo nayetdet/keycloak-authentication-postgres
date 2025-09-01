@@ -1,2 +1,2 @@
-br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.authenticator.idp.IdpAuthenticatorFactory
-br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.authenticator.registration.RegistrationAuthenticatorFactory
+io.github.nayetdet.keycloak.authentication.postgres.authenticator.idp.IdpAuthenticatorFactory
+io.github.nayetdet.keycloak.authentication.postgres.authenticator.registration.RegistrationAuthenticatorFactory

@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.authenticator.idp;
+package io.github.nayetdet.keycloak.authentication.postgres.authenticator.idp;
 
 import com.google.auto.service.AutoService;
 import org.keycloak.Config;

@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.keycloak.authentication.authenticator.registration;
+package io.github.nayetdet.keycloak.authentication.postgres.authenticator.registration;
 
 import org.keycloak.Config;
 import org.keycloak.authentication.Authenticator;

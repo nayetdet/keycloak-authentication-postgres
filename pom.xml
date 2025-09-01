@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>br.com.edu.ifce.maracanau</groupId>
-    <artifactId>carekobooks-keycloak-authentication</artifactId>
+    <groupId>io.github.nayetdet</groupId>
+    <artifactId>keycloak-authentication-postgres</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -14,8 +14,8 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <keycloak.version>26.0.5</keycloak.version>
-        <jboss-logging.version>3.6.1.Final</jboss-logging.version>
+        <keycloak.version>26.0.6</keycloak.version>
+        <jboss-logging.version>3.6.0.Final</jboss-logging.version>
         <autoservice.version>1.1.1</autoservice.version>
         <lombok.version>1.18.38</lombok.version>
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
